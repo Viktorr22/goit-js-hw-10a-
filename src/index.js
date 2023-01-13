@@ -9,7 +9,7 @@ const DEBOUNCE_DELAY = 300;
 const input = document.querySelector('#search-box');
 const list = document.querySelector('.country-list');
 
-input.addEventListener("input", debounce(onInputText, 700)); 
+input.addEventListener("input", debounce(onInputText, DEBOUNCE_DELAY)); 
 
 function onInputText(evt) {
     const inputValue = evt.target.value.trim();
@@ -22,19 +22,6 @@ function onInputText(evt) {
         .catch(err => console.log(err));
 
 }
-
-// function fetchCountries(name) {
-//     const BASE_URL = 'https://restcountries.com/v3.1'
-//     return fetch(`${BASE_URL}/name/${name}?fields=name,capital,population,flags,languages`)
-//         .then(resp => {
-//             if (resp.status === 404) {
-//                 Notiflix.Notify.failure("Oops, there is no country with that name");               
-//             }   
-           
-//             return resp.json();
-//         });   
-    
-// }
 
 function createMarkup(e) {
     if (e.length > 10) {
