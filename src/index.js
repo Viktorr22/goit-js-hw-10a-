@@ -13,13 +13,13 @@ input.addEventListener("input", debounce(onInputText, DEBOUNCE_DELAY));
 
 function onInputText(evt) {
     const inputValue = evt.target.value.trim();
+    clearInput();
     if (!inputValue) {
-        list.innerHTML = '';
         return;
      }
     fetchCountries(inputValue)
         .then(data => createMarkup(data))
-        .catch(err => console.log(err));
+        .catch(err => Notiflix.Notify.failure("Oops, there is no country with that name"));
 
 }
 
@@ -29,35 +29,53 @@ function createMarkup(e) {
          return;
     }
     else if (e.length === 1) {
-       const markupList = ` <li class = "list-item-js">
-                                  <img src="${e[0].flags.svg}" alt="flag" width = 20 height = 20 />
-                                   <h2 class = "title">${e[0].name.official}</h2>
-                            </li>`;
-        list.innerHTML = markupList;
-        
-        const langValue = Object.values(e[0].languages).join(', ');
-        const markupBox = `<p class="country-info-text">Capital:<span class="country-info-value"> ${e[0].capital.join('')}</span></p>
-                           <p class="country-info-text">Population:<span class="country-info-value"> ${e[0].population}</span></p>
-                           <p class="country-info-text">Language:<span class="country-info-value"> ${langValue}</span></p>`
-        list.insertAdjacentHTML("beforeend", markupBox);
-        
+        createMarkupFullBox(e);        
     }
    
     else if (e.length > 2) {
-           list.innerHTML = '';
-           e.forEach((e) => {
-                           const markup = ` <li class = "list-item-js">
-                                  <img src="${e.flags.svg}" alt="flag" width = 20 height = 20 />
-                                   <h2 class = "title-list">${e.name.official}</h2>
-                                  </li>`;
-               list.insertAdjacentHTML("beforeend", markup);
-               
-           });    
+        createMarkupList(e);      
        
     }   
  
     
 }
+
+
+function clearInput() {    
+    list.innerHTML = '';      
+}
+
+
+function createMarkupList(listEvent) {
+    clearInput();    
+    listEvent.map((listEvt) => {
+        const markup = ` <li class = "list-item-js">
+                            <img src="${listEvt.flags.svg}" alt="flag" width = 20 height = 20 />
+                            <h2 class = "title-list">${listEvt.name.official}</h2>
+                         </li>`;
+        list.insertAdjacentHTML("beforeend", markup);
+               
+    });   
+}
+
+
+function createMarkupFullBox(event) {   
+    event.map((evtBox) => {
+        const markupList = ` <li class = "list-item-js">
+                                  <img src="${evtBox.flags.svg}" alt="flag" width = 20 height = 20 />
+                                   <h2 class = "title">${evtBox.name.official}</h2>
+                            </li>`;
+        list.innerHTML = markupList;
+
+        const langValue = Object.values(evtBox.languages).join(', ');
+        const markupBox = `<p class="country-info-text">Capital:<span class="country-info-value"> ${evtBox.capital.join('')}</span></p>
+                           <p class="country-info-text">Population:<span class="country-info-value"> ${evtBox.population}</span></p>
+                           <p class="country-info-text">Language:<span class="country-info-value"> ${langValue}</span></p>`
+        list.insertAdjacentHTML("beforeend", markupBox);
+    });
+}
+
+
 
 
 
